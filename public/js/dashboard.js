@@ -29,7 +29,7 @@ async function fetchUserData() {
             return;
         }
 
-        const response = await fetch('http://localhost:5001/api/users/profile', {
+        const response = await fetch('/api/users/profile', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ function displayUserInfo(user) {
 async function fetchUpcomingEvents() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5001/api/events/my-events', {
+        const response = await fetch('/api/events/my-events', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ function displayUpcomingEvents(events) {
 async function fetchRecommendedEvents() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5001/api/events/for-you', {
+        const response = await fetch('/api/events/for-you', {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -173,7 +173,7 @@ function displayRecommendedEvents(events) {
 async function cancelRSVP(eventId) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5001/api/events/remove-rsvp/${eventId}`, {
+        const response = await fetch(`/api/events/remove-rsvp/${eventId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -187,7 +187,7 @@ async function cancelRSVP(eventId) {
 
         alert('RSVP cancelled successfully');
         fetchUpcomingEvents();
-        fetchUserData(); // Update stats
+        fetchUserData();
     } catch (error) {
         console.error('Error cancelling RSVP:', error);
         alert('Failed to cancel RSVP');
