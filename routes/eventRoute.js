@@ -159,7 +159,7 @@ router.post('/', adminAuth, upload.single('image'), async (req, res) => {
       capacity,
       availableSeats: capacity,
       categories: categories || [],
-      imageUrl: req.file ? req.file.filename : null,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
     });
 
     const newEvent = await event.save();

@@ -120,10 +120,9 @@ function displayEvents(events) {
 
     eventsGrid.innerHTML = events.map(event => `
         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <!-- Event Image/Header -->
             <div class="w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100 relative">
                 ${event.imageUrl ? `
-                    <img src="/uploads/${event.imageUrl.split('/').pop()}" 
+                    <img src="${event.imageUrl}" 
                         alt="${event.name}"
                         class="w-full h-48 object-cover object-center"
                         onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
@@ -135,14 +134,11 @@ function displayEvents(events) {
                 `}
             </div>
 
-            <!-- Event Content -->
             <div class="p-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-3">${event.name}</h3>
                 <p class="text-gray-600 mb-6 line-clamp-2">${event.description}</p>
 
-                <!-- Event Details -->
                 <div class="space-y-3 mb-6">
-                    <!-- Date -->
                     <div class="flex items-center text-gray-700">
                         <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +155,6 @@ function displayEvents(events) {
                         </div>
                     </div>
 
-                    <!-- Time -->
                     <div class="flex items-center text-gray-700">
                         <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,7 +167,6 @@ function displayEvents(events) {
                         </div>
                     </div>
 
-                    <!-- Location -->
                     <div class="flex items-center text-gray-700">
                         <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,7 +181,6 @@ function displayEvents(events) {
                     </div>
                 </div>
 
-                <!-- Seats Info -->
                 <div class="flex items-center justify-end mb-4 text-gray-600">
                     <svg class="w-5 h-5 text-gray-400 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -195,7 +188,6 @@ function displayEvents(events) {
                     <span class="text-sm font-medium">${event.availableSeats} seats available</span>
                 </div>
 
-                <!-- Book Button -->
                 <button onclick="bookEvent('${event._id}')"
                     class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg 
                     transform hover:-translate-y-0.5 transition-all duration-200 
