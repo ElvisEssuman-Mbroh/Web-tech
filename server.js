@@ -13,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // Create uploads directory if it doesn't exist
 if (!fs.existsSync('uploads')) {

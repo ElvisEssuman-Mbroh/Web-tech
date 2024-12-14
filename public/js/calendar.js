@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showEventDetails(info.event.id);
         },
         eventDidMount: function(info) {
-            // Add tooltips
             info.el.title = `
                 ${info.event.title}
                 Location: ${info.event.extendedProps.location}

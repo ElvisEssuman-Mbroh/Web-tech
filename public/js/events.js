@@ -123,10 +123,10 @@ function displayEvents(events) {
             <!-- Event Image/Header -->
             <div class="w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100 relative">
                 ${event.imageUrl ? `
-                    <img src="${event.imageUrl}" 
+                    <img src="/uploads/${event.imageUrl.split('/').pop()}" 
                         alt="${event.name}"
-                        class="w-full h-full object-cover object-center"
-                        onerror="this.onerror=null; this.src='./images/placeholder.jpg';"
+                        class="w-full h-48 object-cover object-center"
+                        onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
                     />
                 ` : `
                     <div class="h-full w-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">

@@ -231,9 +231,10 @@ function updateEventList(events) {
             <div class="flex justify-between items-start">
                 <div class="flex-grow">
                     ${event.imageUrl ? `
-                        <img src="http://localhost:5001${event.imageUrl}" 
+                        <img src="/uploads/${event.imageUrl.split('/').pop()}" 
                             alt="${event.name}" 
                             class="w-full h-48 object-cover rounded-lg mb-4"
+                            onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
                         />
                     ` : `
                         <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
