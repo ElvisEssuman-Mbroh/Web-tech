@@ -86,14 +86,14 @@ async function fetchEvents(filter = 'all') {
         const events = await response.json();
         currentEvents = events;
         
-        // Update both grid and calendar views
+        // Update grid view
         displayEvents(events);
         
-        // If calendar exists, update it
-        if (typeof calendar !== 'undefined') {
+        // Update calendar if it exists and is initialized
+        if (window.calendar && typeof window.calendar.removeAllEvents === 'function') {
             const calendarEvents = formatEventsForCalendar(events);
-            calendar.removeAllEvents();
-            calendar.addEventSource(calendarEvents);
+            window.calendar.removeAllEvents();
+            window.calendar.addEventSource(calendarEvents);
         }
     } catch (error) {
         console.error('Error fetching events:', error);
