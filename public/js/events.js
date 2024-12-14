@@ -39,10 +39,10 @@ function updateFilterButtons(activeFilter) {
 // Show loading state
 function showLoading() {
     const skeleton = document.getElementById('loadingSkeleton').content;
-    eventsGrid.innerHTML = '';
+    gridView.innerHTML = '';
     
     for (let i = 0; i < 6; i++) {
-        eventsGrid.appendChild(skeleton.cloneNode(true));
+        gridView.appendChild(skeleton.cloneNode(true));
     }
 }
 
@@ -335,7 +335,7 @@ function initializeButtons() {
 document.addEventListener('DOMContentLoaded', initializeButtons);
 
 function showError(message) {
-    eventsGrid.innerHTML = `
+    gridView.innerHTML = `
         <div class="col-span-full p-8 text-center">
             <div class="mb-4">
                 <svg class="mx-auto h-12 w-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

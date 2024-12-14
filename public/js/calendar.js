@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const calendarEl = document.getElementById('calendar');
-    if (!calendarEl) return;
+    if (!calendarEl) {
+        console.error('Calendar element not found');
+        return;
+    }
 
-    // Initialize calendar and store it globally
     window.calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         headerToolbar: {
@@ -17,5 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     window.calendar.render();
+    console.log('Calendar initialized');
 });
   
