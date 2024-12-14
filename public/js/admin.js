@@ -1,9 +1,10 @@
+let token = null;
+
 const loginForm = document.getElementById('adminLoginForm');
 const loginSection = document.getElementById('loginSection');
 const adminDashboard = document.getElementById('adminDashboard');
 const eventForm = document.getElementById('eventForm');
 const eventList = document.getElementById('eventList');
-let token = localStorage.getItem('token');
 
 // Check admin authentication
 function checkAdminAuth() {
@@ -53,7 +54,9 @@ loginForm.addEventListener('submit', async (e) => {
             throw new Error(data.error || 'Login failed');
         }
 
-        localStorage.setItem('token', data.token);
+        // Store token globally and in localStorage
+        token = data.token;
+        localStorage.setItem('token', token);
         localStorage.setItem('userRole', 'admin');
         
         loginSection.classList.add('hidden');

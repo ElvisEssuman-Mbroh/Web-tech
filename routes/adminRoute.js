@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign(
             { userId: user._id, role: 'admin' },
-            'your-secret-key',  // Replace with actual secret from env
+            process.env.JWT_SECRET || 'b1a96f1c6e9c4e8e48d9f7c4a7b3e0c6',
             { expiresIn: '24h' }
         );
 
