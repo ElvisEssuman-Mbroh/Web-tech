@@ -10,27 +10,57 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, interests } = req.body;
+    
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.status(400).json({ 
+        error: 'Name, email, and password are required' 
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        error: 'Please enter a valid email address' 
+      });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({ 
+        error: 'Password must be at least 6 characters long' 
+      });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: 'Email already registered' });
+      return res.status(400).json({ 
+        error: 'Email already registered' 
+      });
     }
 
     // Create new user
     const user = new User({
       name,
       email,
-      password, // Password will be hashed by the pre-save middleware
+      password,
       interests: interests || []
     });
 
     await user.save();
+    console.log('User registered successfully:', { name, email });
 
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ 
+      message: 'User registered successfully' 
+    });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(400).json({ error: error.message || 'Registration failed' });
+    res.status(400).json({ 
+      error: error.message || 'Registration failed',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 

@@ -7,16 +7,33 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     
+    // Basic validation
+    if (!name || !email || !password) {
+        errorMessage.textContent = 'All fields are required';
+        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('bg-red-50', 'text-red-500');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match';
+        errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('bg-red-50', 'text-red-500');
+        return;
+    }
+
     // Get selected interests
     const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
         .map(checkbox => checkbox.value);
 
-    // Basic validation
-    if (password !== confirmPassword) {
-        errorMessage.textContent = 'Passwords do not match';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
+    const userData = {
+        name,
+        email,
+        password,
+        interests
+    };
+
+    console.log('Attempting to register with data:', { ...userData, password: '***' });
 
     try {
         const response = await fetch('/api/users/register', {
@@ -24,15 +41,11 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                name,
-                email,
-                password,
-                interests
-            })
+            body: JSON.stringify(userData)
         });
 
         const data = await response.json();
+        console.log('Server response:', data);
 
         if (!response.ok) {
             throw new Error(data.error || 'Registration failed');
@@ -43,13 +56,12 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         errorMessage.classList.remove('hidden', 'bg-red-50', 'text-red-500');
         errorMessage.classList.add('bg-green-50', 'text-green-500');
 
-        // Redirect to login page after a short delay
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 2000);
 
     } catch (error) {
-        console.error('Registration error:', error);
+        console.error('Registration error details:', error);
         errorMessage.textContent = error.message;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('bg-red-50', 'text-red-500');
