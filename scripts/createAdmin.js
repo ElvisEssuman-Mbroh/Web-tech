@@ -6,27 +6,22 @@ const bcrypt = require('bcryptjs');
 async function createAdminUser() {
     try {
         console.log('Connecting to MongoDB...');
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect('mongodb+srv://elvisessumanmbroh:oVpgCst1tceIc8Jm@cluster0.kxus3.mongodb.net/your_database_name?retryWrites=true&w=majority');
         console.log('Connected to MongoDB');
         
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPassword = process.env.ADMIN_PASSWORD;
+        // Hardcoded admin credentials
+        const adminEmail = "essuman@admin.com";
+        const adminPassword = "admin123";
 
-        console.log('Creating admin with email:', adminEmail);
+        // Delete existing admin if any
+        await User.deleteOne({ email: adminEmail });
+        console.log('Cleaned up any existing admin');
 
-        // Check if admin already exists
-        const existingAdmin = await User.findOne({ email: adminEmail });
-        
-        if (existingAdmin) {
-            console.log('Admin user already exists:', {
-                email: existingAdmin.email,
-                role: existingAdmin.role
-            });
-            return;
-        }
-
-        // Create admin user
+        // Hash password
         const hashedPassword = await bcrypt.hash(adminPassword, 10);
+        console.log('Password hashed');
+
+        // Create new admin
         const adminUser = new User({
             name: 'Admin User',
             email: adminEmail,
@@ -35,7 +30,7 @@ async function createAdminUser() {
         });
 
         await adminUser.save();
-        console.log('Admin user created successfully:', {
+        console.log('Admin created successfully:', {
             email: adminUser.email,
             role: adminUser.role,
             id: adminUser._id

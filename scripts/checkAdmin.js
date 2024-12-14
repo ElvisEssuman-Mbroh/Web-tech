@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 
 async function checkAdminUser() {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect('mongodb+srv://elvisessumanmbroh:oVpgCst1tceIc8Jm@cluster0.kxus3.mongodb.net/your_database_name?retryWrites=true&w=majority');
         
         const adminEmail = process.env.ADMIN_EMAIL;
         console.log('Checking for admin with email:', adminEmail);
