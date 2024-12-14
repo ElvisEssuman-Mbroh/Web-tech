@@ -16,6 +16,10 @@
         100% { background-position: -200% 0; }
     }
   </style>
+  <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.css' rel='stylesheet' />
+  <link href='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/main.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/main.min.js'></script>
 </head>
 <body class="min-h-screen bg-gray-50">
   <div class="max-w-7xl mx-auto px-4 py-8">
@@ -63,6 +67,11 @@
       <!-- Events will be dynamically added here -->
     </div>
 
+    <!-- Add this after your Events Grid -->
+    <div class="mt-8">
+        <div id="calendar" class="bg-white p-4 rounded-xl shadow-lg"></div>
+    </div>
+
     <!-- Event Details Modal -->
     <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
@@ -102,27 +111,6 @@
 
   <script src="./js/header.js"></script>
   <script src="./js/events.js"></script>
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: [], // Will be populated by fetchEvents
-        eventClick: function(info) {
-            // Show event details when clicked
-            showEventDetails(info.event.id);
-        }
-    });
-    calendar.render();
-    
-    // Initial fetch of events
-    fetchEvents();
-});
-</script>
+  <script src="./js/calendar.js"></script>
 </body>
 </html>
