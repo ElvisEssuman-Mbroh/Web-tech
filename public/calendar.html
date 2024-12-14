@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Calendar - Campus E-vents</title>
+    <link href="./css/output.css" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Header will be inserted by header.js -->
+    <script src="./js/header.js"></script>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Event Calendar</h1>
+            <p class="text-gray-600">View and manage your events</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div id="calendar" style="min-height: 700px;"></div>
+        </div>
+    </div>
+
+    <script src="./js/checkAuth.js"></script>
+    <script src="./js/calendar.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./css/output.css" rel="stylesheet">
+  <title>Admin Dashboard - Campus E-vents</title>
+</head>
+<body class="min-h-screen bg-gray-50">
+  <!-- Admin Login Section -->
+  <div id="loginSection" class="max-w-md mx-auto mt-20 p-6 bg-white rounded-xl shadow-lg">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Admin Login</h2>
+    <form id="adminLoginForm" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-2" for="adminEmail">Email</label>
+        <input type="email" id="adminEmail" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <div>
+        <label class="block text-gray-700 font-medium mb-2" for="adminPassword">Password</label>
+        <input type="password" id="adminPassword" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+      <button type="submit" 
+        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors">
+        Login
+      </button>
+    </form>
+  </div>
+
+  <!-- Admin Dashboard Section -->
+  <div id="adminDashboard" class="hidden max-w-7xl mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+      <button id="logoutBtn" 
+        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+        Logout
+      </button>
+    </div>
+
+    <!-- Dashboard Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                    <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Total Bookings</h2>
+                    <p class="text-2xl font-semibold text-gray-800" id="totalBookings">0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                    <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Active Events</h2>
+                    <p class="text-2xl font-semibold text-gray-800" id="activeEvents">0</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                    <svg class="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-sm font-medium text-gray-600">Available Seats</h2>
+                    <p class="text-2xl font-semibold text-gray-800" id="totalAvailableSeats">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Event Form -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Create/Edit Event</h2>
+      <form id="eventForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <input type="hidden" id="eventId">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2" for="name">Event Name</label>
+          <input type="text" id="name" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2" for="date">Date</label>
+          <input type="date" id="date" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2" for="time">Time</label>
+          <input type="time" id="time" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2" for="location">Location</label>
+          <input type="text" id="location" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2" for="capacity">Capacity</label>
+          <input type="number" id="capacity" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-gray-700 font-medium mb-2" for="description">Description</label>
+          <textarea id="description" rows="4" required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-gray-700 font-medium mb-2" for="image">Event Image</label>
+          <input type="file" id="image" accept="image/*"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <p class="text-sm text-gray-500 mt-1">Recommended size: 800x400 pixels</p>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" 
+            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+            Save Event
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Events List -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Manage Events</h2>
+      <div id="eventList" class="space-y-4">
+        <!-- Events will be dynamically added here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./css/output.css" rel="stylesheet">
+  <title>Events - Campus E-vents</title>
+  <style>
+    .shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Events Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">Upcoming Events</h1>
+      <p class="text-gray-600">Discover and book amazing events</p>
+    </div>
+
+    <!-- Filter Buttons Container -->
+    <div id="filterButtons" class="bg-white rounded-xl shadow-sm mb-8">
+        <div class="flex border-b">
+            <button id="allEventsBtn"
+                class="flex-1 px-6 py-4 text-center font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent transition-all duration-200">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    <span>All Events</span>
+                </div>
+            </button>
+            <button id="forYouBtn"
+                class="flex-1 px-6 py-4 text-center font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent transition-all duration-200">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    <span>For You</span>
+                </div>
+            </button>
+            <button id="myEventsBtn"
+                class="flex-1 px-6 py-4 text-center font-medium text-gray-700 hover:text-blue-600 border-b-2 border-transparent transition-all duration-200">
+                <div class="flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    <span>My Events</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div id="eventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Events will be dynamically added here -->
+    </div>
+
+    <!-- Event Details Modal -->
+    <div id="eventModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+        <div id="modalContent"></div>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button onclick="bookEvent()" 
+            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+            Book Now
+          </button>
+          <button onclick="closeModal()" 
+            class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add a loading skeleton template -->
+    <template id="loadingSkeleton">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
+            <div class="h-48 bg-gray-200"></div>
+            <div class="p-6 space-y-4">
+                <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+                <div class="space-y-2">
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                    <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                </div>
+                <div class="space-y-2">
+                    <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+                <div class="h-10 bg-gray-200 rounded"></div>
+            </div>
+        </div>
+    </template>
+  </div>
+
+  <script src="./js/header.js"></script>
+  <script src="./js/events.js"></script>
+</body>
+</html>
