@@ -3,6 +3,10 @@ const eventsGrid = document.getElementById('eventsGrid');
 const modal = document.getElementById('eventModal');
 const modalContent = document.getElementById('modalContent');
 let selectedEventId = null;
+const gridView = document.getElementById('gridView');
+const calendarView = document.getElementById('calendarView');
+const gridViewBtn = document.getElementById('gridViewBtn');
+const calendarViewBtn = document.getElementById('calendarViewBtn');
 
 // Update the filter buttons section
 function updateFilterButtons(activeFilter) {
@@ -104,7 +108,7 @@ async function fetchEvents(filter = 'all') {
 // Display events in grid
 function displayEvents(events) {
     if (!events.length) {
-        eventsGrid.innerHTML = `
+        gridView.innerHTML = `
             <div class="col-span-full p-8 text-center">
                 <div class="mb-4">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +122,7 @@ function displayEvents(events) {
         return;
     }
 
-    eventsGrid.innerHTML = events.map(event => `
+    gridView.innerHTML = events.map(event => `
         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             <div class="w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100 relative">
                 ${event.imageUrl ? `
@@ -321,6 +325,10 @@ function initializeButtons() {
     // Set initial state
     updateFilterButtons('all');
     fetchEvents('all');
+
+    // View switching buttons
+    gridViewBtn.onclick = () => switchView('grid');
+    calendarViewBtn.onclick = () => switchView('calendar');
 }
 
 // Initialize when DOM is ready
@@ -342,5 +350,27 @@ function showError(message) {
             </button>
         </div>
     `;
+}
+
+// Add this function to handle view switching
+function switchView(view) {
+    if (view === 'calendar') {
+        gridView.classList.add('hidden');
+        calendarView.classList.remove('hidden');
+        gridViewBtn.classList.remove('text-blue-600', 'border-blue-600');
+        gridViewBtn.classList.add('text-gray-700', 'border-transparent');
+        calendarViewBtn.classList.add('text-blue-600', 'border-blue-600');
+        calendarViewBtn.classList.remove('text-gray-700', 'border-transparent');
+        if (window.calendar) {
+            window.calendar.render();
+        }
+    } else {
+        calendarView.classList.add('hidden');
+        gridView.classList.remove('hidden');
+        calendarViewBtn.classList.remove('text-blue-600', 'border-blue-600');
+        calendarViewBtn.classList.add('text-gray-700', 'border-transparent');
+        gridViewBtn.classList.add('text-blue-600', 'border-blue-600');
+        gridViewBtn.classList.remove('text-gray-700', 'border-transparent');
+    }
 }
   
