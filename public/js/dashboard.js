@@ -209,4 +209,47 @@ function logout() {
     localStorage.removeItem('userEmail');
     window.location.href = 'index.html';
 }
+
+async function fetchDashboardStats() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const response = await fetch('/api/events/dashboard-stats', {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch dashboard stats');
+        }
+
+        const stats = await response.json();
+        
+        // Update the dashboard UI
+        document.getElementById('upcomingEventsCount').textContent = stats.upcomingEvents;
+        document.getElementById('eventsAttendedCount').textContent = stats.eventsAttended;
+        document.getElementById('matchPercentage').textContent = `${stats.matchPercentage}%`;
+
+    } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        // Show error message on dashboard
+        const statsContainer = document.querySelector('.stats-container');
+        if (statsContainer) {
+            statsContainer.innerHTML = `
+                <div class="text-red-500 text-center p-4">
+                    Failed to load dashboard statistics. Please try again later.
+                </div>
+            `;
+        }
+    }
+}
+
+// Call this when the page loads
+document.addEventListener('DOMContentLoaded', fetchDashboardStats);
   

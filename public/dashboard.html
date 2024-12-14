@@ -72,45 +72,20 @@
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
                 <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="stats-container grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
-                                <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-sm font-medium text-gray-600">Upcoming Events</h2>
-                                <p class="text-2xl font-semibold text-gray-800" id="upcomingEventsCount">0</p>
-                            </div>
-                        </div>
+                        <h3 class="text-gray-500 text-sm font-medium">Upcoming Events</h3>
+                        <p id="upcomingEventsCount" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
+                    
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
-                                <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-sm font-medium text-gray-600">Events Attended</h2>
-                                <p class="text-2xl font-semibold text-gray-800" id="attendedEventsCount">0</p>
-                            </div>
-                        </div>
+                        <h3 class="text-gray-500 text-sm font-medium">Events Attended</h3>
+                        <p id="eventsAttendedCount" class="text-3xl font-bold text-gray-900">0</p>
                     </div>
+                    
                     <div class="bg-white rounded-xl shadow-sm p-6">
-                        <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
-                                <svg class="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4">
-                                <h2 class="text-sm font-medium text-gray-600">Interests Match</h2>
-                                <p class="text-2xl font-semibold text-gray-800" id="interestsMatchCount">0%</p>
-                            </div>
-                        </div>
+                        <h3 class="text-gray-500 text-sm font-medium">Interest Match</h3>
+                        <p id="matchPercentage" class="text-3xl font-bold text-gray-900">0%</p>
                     </div>
                 </div>
 

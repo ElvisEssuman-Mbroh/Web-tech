@@ -260,4 +260,39 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// Add this new route for dashboard stats
+router.get('/dashboard-stats', auth, async (req, res) => {
+    try {
+        const now = new Date();
+        
+        // Get upcoming events (events with date >= today)
+        const upcomingEvents = await Event.find({
+            date: { $gte: now }
+        }).sort({ date: 1 });
+
+        // Get events user has booked
+        const user = await User.findById(req.userId).populate('rsvpedEvents');
+        const eventsAttended = user ? user.rsvpedEvents.length : 0;
+
+        // Calculate match percentage based on user preferences
+        let matchPercentage = 0;
+        if (user && user.preferences && user.preferences.length > 0) {
+            const matchingEvents = upcomingEvents.filter(event => 
+                event.categories.some(cat => user.preferences.includes(cat))
+            );
+            matchPercentage = Math.round((matchingEvents.length / upcomingEvents.length) * 100) || 0;
+        }
+
+        res.json({
+            upcomingEvents: upcomingEvents.length,
+            eventsAttended,
+            matchPercentage
+        });
+
+    } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        res.status(500).json({ error: 'Error fetching dashboard stats' });
+    }
+});
+
 module.exports = router;
