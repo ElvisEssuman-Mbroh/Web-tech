@@ -255,6 +255,7 @@ async function bookEvent(eventId) {
     try {
         console.log('Attempting to book event with ID:', eventId); // Debug log
         const token = localStorage.getItem('token');
+        console.log('Token:', token); // Debug log
         if (!token) {
             window.location.href = 'login.html';
             return;
