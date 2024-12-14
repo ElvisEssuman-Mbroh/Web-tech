@@ -88,19 +88,22 @@ function updateDashboardStats(events) {
 
 // Update the fetchEvents function
 async function fetchEvents() {
-    if (!token) return;
+    if (!token) {
+        console.log('No token available');
+        return;
+    }
     
     try {
         const response = await fetch('/api/events', {
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
+            }
         });
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch events');
+            throw new Error(errorData.error || 'Failed to fetch events');
         }
 
         const events = await response.json();

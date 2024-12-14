@@ -268,35 +268,12 @@ router.get('/:id', async (req, res) => {
 // 5. General GET route last
 router.get('/', auth, async (req, res) => {
   try {
-    console.log('GET events - User:', req.user); // Debug log
-    
-    let query = {};
-    
-    // If not admin, only show future events
-    if (!req.user || req.user.role !== 'admin') {
-      query.date = { $gte: new Date() };
-    }
-
-    console.log('Query:', query); // Debug log
-    const events = await Event.find(query).sort('date');
-    console.log('Found events:', events.length); // Debug log
-    
-    // If there's an authenticated user, add RSVP status
-    if (req.userId) {
-      const user = await User.findById(req.userId);
-      if (user) {
-        const eventsWithRSVPStatus = events.map(event => ({
-          ...event._doc,
-          isRSVPed: user.rsvpedEvents.includes(event._id.toString()),
-        }));
-        return res.status(200).json(eventsWithRSVPStatus);
-      }
-    }
-    
-    res.status(200).json(events);
+    // Allow admin to see all events
+    const events = await Event.find({});
+    res.json(events);
   } catch (error) {
-    console.error('Error fetching events:', error.message);
-    res.status(500).json({ error: 'Server error. Could not fetch events.' });
+    console.error('Error fetching events:', error);
+    res.status(500).json({ error: 'Error fetching events' });
   }
 });
 
