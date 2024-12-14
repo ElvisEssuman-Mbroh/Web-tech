@@ -28,6 +28,13 @@ loginForm.addEventListener('submit', async (e) => {
     
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
+    const errorMessage = document.querySelector('#loginSection .error-message') || 
+        document.createElement('div');
+    
+    errorMessage.className = 'error-message text-red-500 mt-4 text-center';
+    if (!document.querySelector('#loginSection .error-message')) {
+        loginForm.appendChild(errorMessage);
+    }
 
     try {
         const response = await fetch('/api/admin/login', {
@@ -41,7 +48,7 @@ loginForm.addEventListener('submit', async (e) => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Login failed');
+            throw new Error(data.error || 'Login failed');
         }
 
         // Store the token and role
@@ -58,7 +65,7 @@ loginForm.addEventListener('submit', async (e) => {
 
     } catch (error) {
         console.error('Login error:', error);
-        alert('Login failed. Please check your credentials.');
+        errorMessage.textContent = error.message;
     }
 });
 

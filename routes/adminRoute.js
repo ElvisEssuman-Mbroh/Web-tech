@@ -1,44 +1,53 @@
 const express = require('express');
-const router = express.Router();
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const Admin = require('../models/Admin');
+const User = require('../models/userModel');
+const router = express.Router();
 
+// Admin login
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log('Login attempt:', email); // Debug log
+
+        // Debug log
+        console.log('Admin login attempt:', email);
+
+        // Find user and check if they're an admin
+        const user = await User.findOne({ email });
         
-        // Find admin by email
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            console.log('Admin not found'); // Debug log
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (!user || user.role !== 'admin') {
+            console.log('Admin login failed: User not found or not admin');
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Verify password
-        const isValidPassword = await bcrypt.compare(password, admin.password);
-        if (!isValidPassword) {
-            console.log('Invalid password'); // Debug log
-            return res.status(401).json({ message: 'Invalid credentials' });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            console.log('Admin login failed: Invalid password');
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Generate JWT token with explicit role
+        // Create token
         const token = jwt.sign(
-            { 
-                id: admin._id, 
-                email: admin.email,
-                role: 'admin' // Explicitly include admin role
-            },
+            { userId: user._id, role: 'admin' },
             process.env.JWT_SECRET,
-            { expiresIn: '24h' }
+            { expiresIn: '1h' }
         );
 
-        console.log('Login successful, token generated'); // Debug log
-        res.json({ token });
+        console.log('Admin login successful:', email);
+        res.json({
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+
     } catch (error) {
         console.error('Admin login error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
