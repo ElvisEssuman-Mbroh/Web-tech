@@ -141,7 +141,7 @@ router.post('/remove-rsvp/:eventId', auth, async (req, res) => {
   
 
 // 3. Admin routes for event management
-router.post('/', adminAuth, upload.single('image'), async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   console.log('Create event request:', req.body);
   const { name, description, date, time, location, capacity, categories } = req.body;
 
@@ -158,8 +158,7 @@ router.post('/', adminAuth, upload.single('image'), async (req, res) => {
       location,
       capacity,
       availableSeats: capacity,
-      categories: categories || [],
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : null,
+      categories: categories || []
     });
 
     const newEvent = await event.save();
@@ -171,7 +170,7 @@ router.post('/', adminAuth, upload.single('image'), async (req, res) => {
   }
 });
 
-router.put('/:id', adminAuth, upload.single('image'), async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   console.log('Update event request:', req.body);
   
   try {
@@ -189,11 +188,6 @@ router.put('/:id', adminAuth, upload.single('image'), async (req, res) => {
         updateFields[field] = req.body[field];
       }
     });
-
-    // Handle image update
-    if (req.file) {
-      updateFields.imageUrl = `/uploads/${req.file.filename}`;
-    }
 
     // If capacity is being updated, adjust availableSeats
     if (updateFields.capacity !== undefined) {

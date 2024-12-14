@@ -127,31 +127,24 @@ eventForm.addEventListener('submit', async (e) => {
     const formData = new FormData();
     const eventId = document.getElementById('eventId').value;
     
-    // Add all form fields to FormData
+    // Add form fields
     formData.append('name', document.getElementById('name').value);
     formData.append('description', document.getElementById('description').value);
     formData.append('date', document.getElementById('date').value);
     formData.append('time', document.getElementById('time').value);
     formData.append('location', document.getElementById('location').value);
     formData.append('capacity', document.getElementById('capacity').value);
-    
-    // Add image if selected
-    const imageInput = document.getElementById('image');
-    if (imageInput.files[0]) {
-        formData.append('image', imageInput.files[0]);
-    }
 
     try {
         const response = await fetch(
-            eventId 
-                ? `/api/events/${eventId}`
-                : '/api/events',
+            eventId ? `/api/events/${eventId}` : '/api/events',
             {
                 method: eventId ? 'PUT' : 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 },
-                body: formData // Send as FormData instead of JSON
+                body: JSON.stringify(Object.fromEntries(formData))
             }
         );
 
@@ -230,17 +223,9 @@ function updateEventList(events) {
         <div class="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow duration-200 mb-4">
             <div class="flex justify-between items-start">
                 <div class="flex-grow">
-                    ${event.imageUrl ? `
-                        <img src="${event.imageUrl}" 
-                            alt="${event.name}" 
-                            class="w-full h-48 object-cover rounded-lg mb-4"
-                            onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
-                        />
-                    ` : `
-                        <div class="w-full h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                            <span class="text-gray-400">No image available</span>
-                        </div>
-                    `}
+                    <div class="h-48 w-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center rounded-lg mb-4">
+                        <span class="text-white text-xl font-semibold">${event.name}</span>
+                    </div>
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">${event.name}</h3>
                     <p class="text-gray-600 mb-4">${event.description}</p>
                     <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">

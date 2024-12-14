@@ -132,18 +132,8 @@ function displayEvents(events) {
 
     gridView.innerHTML = events.map(event => `
         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-            <div class="w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100 relative">
-                ${event.imageUrl ? `
-                    <img src="${event.imageUrl}" 
-                        alt="${event.name}"
-                        class="w-full h-48 object-cover object-center"
-                        onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
-                    />
-                ` : `
-                    <div class="h-full w-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                        <span class="text-white text-xl font-semibold">${event.name}</span>
-                    </div>
-                `}
+            <div class="h-48 w-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                <span class="text-white text-xl font-semibold">${event.name}</span>
             </div>
 
             <div class="p-6">
