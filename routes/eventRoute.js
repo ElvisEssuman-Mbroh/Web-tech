@@ -274,19 +274,9 @@ router.get('/dashboard-stats', auth, async (req, res) => {
         const user = await User.findById(req.userId).populate('rsvpedEvents');
         const eventsAttended = user ? user.rsvpedEvents.length : 0;
 
-        // Calculate match percentage based on user preferences
-        let matchPercentage = 0;
-        if (user && user.preferences && user.preferences.length > 0) {
-            const matchingEvents = upcomingEvents.filter(event => 
-                event.categories.some(cat => user.preferences.includes(cat))
-            );
-            matchPercentage = Math.round((matchingEvents.length / upcomingEvents.length) * 100) || 0;
-        }
-
         res.json({
             upcomingEvents: upcomingEvents.length,
-            eventsAttended,
-            matchPercentage
+            eventsAttended
         });
 
     } catch (error) {

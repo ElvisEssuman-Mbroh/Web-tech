@@ -234,7 +234,6 @@ async function fetchDashboardStats() {
         // Update the dashboard UI
         document.getElementById('upcomingEventsCount').textContent = stats.upcomingEvents;
         document.getElementById('eventsAttendedCount').textContent = stats.eventsAttended;
-        document.getElementById('matchPercentage').textContent = `${stats.matchPercentage}%`;
 
     } catch (error) {
         console.error('Error fetching dashboard stats:', error);
