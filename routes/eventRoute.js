@@ -241,26 +241,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// 5. General GET route last
-router.get('/', auth, async (req, res) => {
-  try {
-    let events = await Event.find({}).sort({ date: 1 });
-    
-    // Format the events
-    events = events.map(event => ({
-      ...event.toObject(),
-      date: event.date.toISOString().split('T')[0], // Format: "YYYY-MM-DD"
-      time: event.time // Should be in format: "HH:mm" (24-hour)
-    }));
-
-    res.json(events);
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    res.status(500).json({ error: 'Error fetching events' });
-  }
-});
-
-// Add this new route for dashboard stats
+// Move this route before the general GET route
 router.get('/dashboard-stats', auth, async (req, res) => {
     try {
         const now = new Date();
@@ -283,6 +264,25 @@ router.get('/dashboard-stats', auth, async (req, res) => {
         console.error('Error fetching dashboard stats:', error);
         res.status(500).json({ error: 'Error fetching dashboard stats' });
     }
+});
+
+// General GET route should be last
+router.get('/', auth, async (req, res) => {
+  try {
+    let events = await Event.find({}).sort({ date: 1 });
+    
+    // Format the events
+    events = events.map(event => ({
+      ...event.toObject(),
+      date: event.date.toISOString().split('T')[0], // Format: "YYYY-MM-DD"
+      time: event.time // Should be in format: "HH:mm" (24-hour)
+    }));
+
+    res.json(events);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    res.status(500).json({ error: 'Error fetching events' });
+  }
 });
 
 module.exports = router;

@@ -51,11 +51,14 @@ async function fetchUserData() {
 function displayUserInfo(user) {
     // Update username
     const userNameElement = document.getElementById('userName');
-    if (userNameElement) userNameElement.textContent = user.name;
+    if (userNameElement) {
+        userNameElement.textContent = user.name;
+    }
 
-    // Update stats
-    if (user.rsvpedEvents) {
-        document.getElementById('upcomingEventsCount').textContent = user.rsvpedEvents.length || 0;
+    // Update stats only if elements exist
+    const upcomingEventsElement = document.getElementById('upcomingEventsCount');
+    if (upcomingEventsElement && user.rsvpedEvents) {
+        upcomingEventsElement.textContent = user.rsvpedEvents.length || 0;
     }
 }
 
@@ -195,10 +198,15 @@ async function cancelRSVP(eventId) {
 }
 
 // Initialize dashboard
-document.addEventListener('DOMContentLoaded', () => {
-    fetchUserData();
-    fetchUpcomingEvents();
-    fetchRecommendedEvents();
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await fetchDashboardStats();
+        await fetchUserData();
+        await fetchUpcomingEvents();
+        await fetchRecommendedEvents();
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+    }
 });
 
 // Logout function
@@ -226,23 +234,30 @@ async function fetchDashboardStats() {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch dashboard stats');
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to fetch dashboard stats');
         }
 
         const stats = await response.json();
         
-        // Update the dashboard UI
-        document.getElementById('upcomingEventsCount').textContent = stats.upcomingEvents;
-        document.getElementById('eventsAttendedCount').textContent = stats.eventsAttended;
+        // Update stats only if elements exist
+        const upcomingEventsElement = document.getElementById('upcomingEventsCount');
+        const eventsAttendedElement = document.getElementById('eventsAttendedCount');
+        
+        if (upcomingEventsElement) {
+            upcomingEventsElement.textContent = stats.upcomingEvents;
+        }
+        if (eventsAttendedElement) {
+            eventsAttendedElement.textContent = stats.eventsAttended;
+        }
 
     } catch (error) {
         console.error('Error fetching dashboard stats:', error);
-        // Show error message on dashboard
         const statsContainer = document.querySelector('.stats-container');
         if (statsContainer) {
             statsContainer.innerHTML = `
                 <div class="text-red-500 text-center p-4">
-                    Failed to load dashboard statistics. Please try again later.
+                    ${error.message || 'Failed to load dashboard statistics. Please try again later.'}
                 </div>
             `;
         }
