@@ -2,10 +2,34 @@ const express = require('express');
 const Event = require('../models/eventModel');
 const User = require('../models/userModel');
 const { auth, adminAuth } = require('../middleware/auth');
-const upload = require('../middleware/upload');
 const mongoose = require('mongoose');
 
 const router = express.Router();
+
+// Move dashboard-stats route to the top, before other routes
+router.get('/dashboard-stats', auth, async (req, res) => {
+    try {
+        const now = new Date();
+        
+        // Get upcoming events (events with date >= today)
+        const upcomingEvents = await Event.find({
+            date: { $gte: now }
+        }).sort({ date: 1 });
+
+        // Get events user has booked
+        const user = await User.findById(req.userId).populate('rsvpedEvents');
+        const eventsAttended = user ? user.rsvpedEvents.length : 0;
+
+        res.json({
+            upcomingEvents: upcomingEvents.length,
+            eventsAttended
+        });
+
+    } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        res.status(500).json({ error: 'Error fetching dashboard stats' });
+    }
+});
 
 // 1. Specific GET routes first
 router.get('/my-events', auth, async (req, res) => {
@@ -233,31 +257,6 @@ router.get('/:id', async (req, res) => {
     console.error('Error fetching event:', error);
     res.status(500).json({ message: 'Error fetching event details' });
   }
-});
-
-// Move this route before the general GET route
-router.get('/dashboard-stats', auth, async (req, res) => {
-    try {
-        const now = new Date();
-        
-        // Get upcoming events (events with date >= today)
-        const upcomingEvents = await Event.find({
-            date: { $gte: now }
-        }).sort({ date: 1 });
-
-        // Get events user has booked
-        const user = await User.findById(req.userId).populate('rsvpedEvents');
-        const eventsAttended = user ? user.rsvpedEvents.length : 0;
-
-        res.json({
-            upcomingEvents: upcomingEvents.length,
-            eventsAttended
-        });
-
-    } catch (error) {
-        console.error('Error fetching dashboard stats:', error);
-        res.status(500).json({ error: 'Error fetching dashboard stats' });
-    }
 });
 
 // General GET route should be last

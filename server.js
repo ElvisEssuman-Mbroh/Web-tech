@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 
@@ -12,16 +11,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
-app.use('/images', express.static('public/images'));
-
-// Create uploads directory if it doesn't exist
-if (!fs.existsSync('uploads')) {
-    fs.mkdirSync('uploads');
-}
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://elvisessumanmbroh:oVpgCst1tceIc8Jm@cluster0.kxus3.mongodb.net/AcityEvents?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://elvisessumanmbroh:oVpgCst1tceIc8Jm@cluster0.kxus3.mongodb.net/AcityEvents?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
