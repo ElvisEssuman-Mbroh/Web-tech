@@ -102,5 +102,27 @@
 
   <script src="./js/header.js"></script>
   <script src="./js/events.js"></script>
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: [], // Will be populated by fetchEvents
+        eventClick: function(info) {
+            // Show event details when clicked
+            showEventDetails(info.event.id);
+        }
+    });
+    calendar.render();
+    
+    // Initial fetch of events
+    fetchEvents();
+});
+</script>
 </body>
 </html>

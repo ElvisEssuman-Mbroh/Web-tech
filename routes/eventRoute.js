@@ -244,8 +244,18 @@ router.get('/:id', async (req, res) => {
 // 5. General GET route last
 router.get('/', auth, async (req, res) => {
   try {
-    // Allow admin to see all events
-    const events = await Event.find({});
+    let events;
+    if (req.userRole === 'admin') {
+      // Admin sees all events
+      events = await Event.find({}).sort({ date: 1 });
+    } else {
+      // Regular users see only upcoming events
+      events = await Event.find({
+        date: { $gte: new Date() }
+      }).sort({ date: 1 });
+    }
+
+    console.log(`Found ${events.length} events for ${req.userRole}`);
     res.json(events);
   } catch (error) {
     console.error('Error fetching events:', error);

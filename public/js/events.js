@@ -42,7 +42,20 @@ function showLoading() {
     }
 }
 
-// Fetch and display events
+// Add this function to format events for calendar
+function formatEventsForCalendar(events) {
+    return events.map(event => ({
+        title: event.name,
+        start: new Date(event.date + 'T' + event.time),
+        location: event.location,
+        extendedProps: {
+            description: event.description,
+            availableSeats: event.availableSeats
+        }
+    }));
+}
+
+// Update fetchEvents to handle calendar
 async function fetchEvents(filter = 'all') {
     try {
         showLoading();
@@ -72,24 +85,19 @@ async function fetchEvents(filter = 'all') {
         
         const events = await response.json();
         currentEvents = events;
+        
+        // Update both grid and calendar views
         displayEvents(events);
+        
+        // If calendar exists, update it
+        if (typeof calendar !== 'undefined') {
+            const calendarEvents = formatEventsForCalendar(events);
+            calendar.removeAllEvents();
+            calendar.addEventSource(calendarEvents);
+        }
     } catch (error) {
         console.error('Error fetching events:', error);
-        eventsGrid.innerHTML = `
-            <div class="col-span-full p-8 text-center">
-                <div class="mb-4">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-lg font-medium text-gray-900">Failed to load events</h3>
-                <p class="mt-2 text-sm text-gray-500">Please try again later.</p>
-                <button onclick="fetchEvents('${filter}')" 
-                    class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                    Retry
-                </button>
-            </div>
-        `;
+        showError(error.message);
     }
 }
 
@@ -325,4 +333,22 @@ function initializeButtons() {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeButtons);
+
+function showError(message) {
+    eventsGrid.innerHTML = `
+        <div class="col-span-full p-8 text-center">
+            <div class="mb-4">
+                <svg class="mx-auto h-12 w-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">Error Loading Events</h3>
+            <p class="mt-2 text-sm text-gray-500">${message}</p>
+            <button onclick="fetchEvents()" 
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                Retry
+            </button>
+        </div>
+    `;
+}
   
