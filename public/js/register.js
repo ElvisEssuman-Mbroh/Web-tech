@@ -6,19 +6,14 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    // Get selected interests
     const interests = Array.from(document.querySelectorAll('input[name="interests"]:checked'))
         .map(checkbox => checkbox.value);
 
-    // Validate passwords match
+    // Basic validation
     if (password !== confirmPassword) {
         errorMessage.textContent = 'Passwords do not match';
-        errorMessage.classList.remove('hidden');
-        return;
-    }
-
-    // Validate password strength
-    if (password.length < 6) {
-        errorMessage.textContent = 'Password must be at least 6 characters long';
         errorMessage.classList.remove('hidden');
         return;
     }
@@ -34,21 +29,21 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
                 email,
                 password,
                 interests
-            }),
+            })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Registration failed');
+            throw new Error(data.error || 'Registration failed');
         }
 
-        // Show success message with animation
+        // Show success message
         errorMessage.textContent = 'Registration successful! Redirecting to login...';
         errorMessage.classList.remove('hidden', 'bg-red-50', 'text-red-500');
         errorMessage.classList.add('bg-green-50', 'text-green-500');
 
-        // Redirect to login after a short delay
+        // Redirect to login page after a short delay
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 2000);
@@ -57,6 +52,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         console.error('Registration error:', error);
         errorMessage.textContent = error.message;
         errorMessage.classList.remove('hidden');
+        errorMessage.classList.add('bg-red-50', 'text-red-500');
     }
 });
 

@@ -8,7 +8,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     try {
         console.log('Attempting login with:', { email }); // Debug log
 
-        const response = await fetch('http://localhost:5001/api/users/login', {
+        const response = await fetch('/api/users/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

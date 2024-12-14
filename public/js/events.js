@@ -56,13 +56,13 @@ async function fetchEvents(filter = 'all') {
         let url;
         switch(filter) {
             case 'my':
-                url = 'http://localhost:5001/api/events/my-events';
+                url = '/api/events/my-events';
                 break;
             case 'recommended':
-                url = 'http://localhost:5001/api/events/for-you';
+                url = '/api/events/for-you';
                 break;
             default:
-                url = 'http://localhost:5001/api/events';
+                url = '/api/events';
         }
         
         const response = await fetch(url, { headers });
@@ -115,7 +115,7 @@ function displayEvents(events) {
             <!-- Event Image/Header -->
             <div class="w-full h-48 overflow-hidden flex items-center justify-center bg-gray-100 relative">
                 ${event.imageUrl ? `
-                    <img src="http://localhost:5001${event.imageUrl}" 
+                    <img src="${event.imageUrl}" 
                         alt="${event.name}"
                         class="w-full h-full object-cover object-center"
                     />
@@ -211,7 +211,7 @@ function showEventDetails(eventId) {
     
     modalContent.innerHTML = `
         ${event.imageUrl ? `
-            <img src="http://localhost:5001${event.imageUrl}" 
+            <img src="${event.imageUrl}" 
                 alt="${event.name}"
                 class="w-full h-64 object-cover rounded-lg mb-4"
             />
@@ -260,7 +260,7 @@ async function bookEvent(eventId) {
             return;
         }
 
-        const response = await fetch(`http://localhost:5001/api/events/rsvp/${eventId}`, {
+        const response = await fetch(`/api/events/rsvp/${eventId}`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,

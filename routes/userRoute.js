@@ -8,32 +8,29 @@ const router = express.Router();
 
 // Register
 router.post('/register', async (req, res) => {
-  const { name, email, password, preferences } = req.body;
-  console.log('Registration attempt for:', email); // Debug log
-
   try {
+    const { name, email, password, interests } = req.body;
+
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log('User already exists:', email);
       return res.status(400).json({ error: 'Email already registered' });
     }
 
-    // Create new user (let the schema middleware handle password hashing)
-    const user = new User({ 
-      name, 
-      email, 
-      password, // Don't hash here - let the schema middleware do it
-      preferences: preferences || [] 
+    // Create new user
+    const user = new User({
+      name,
+      email,
+      password, // Password will be hashed by the pre-save middleware
+      interests: interests || []
     });
 
     await user.save();
-    console.log('User registered successfully:', email);
 
     res.status(201).json({ message: 'User registered successfully' });
-  } catch (err) {
-    console.error('Registration error:', err);
-    res.status(400).json({ error: 'Registration failed. ' + err.message });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(400).json({ error: error.message || 'Registration failed' });
   }
 });
 
