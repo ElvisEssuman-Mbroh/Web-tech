@@ -5,10 +5,10 @@ const Admin = require('./models/Admin');
 
 async function seedAdmin() {
     try {
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/AcityEvents');
+        await mongoose.connect(process.env.MONGO_URI );
         
         // Check if admin already exists
-        const existingAdmin = await Admin.findOne({ email: 'elvis@admin.com' });
+        const existingAdmin = await Admin.findOne({ email: 'elviss@admin.com' });
         if (existingAdmin) {
             console.log('Admin already exists');
             return;
@@ -16,6 +16,7 @@ async function seedAdmin() {
 
         // Create new admin
         const hashedPassword = await bcrypt.hash('admin123', 10);
+        console.log(hashedPassword);
         const admin = new Admin({
             email: 'elvis@admin.com',
             password: hashedPassword

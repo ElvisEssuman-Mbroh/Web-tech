@@ -8,22 +8,25 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-
-        // Debug log
-        console.log('Admin login attempt:', email);
+        console.log('Admin login attempt for:', email);
 
         // Find user and check if they're an admin
         const user = await User.findOne({ email });
         
-        if (!user || user.role !== 'admin') {
-            console.log('Admin login failed: User not found or not admin');
+        if (!user) {
+            console.log('No user found with email:', email);
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        if (user.role !== 'admin') {
+            console.log('User found but not admin:', email);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         // Verify password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            console.log('Admin login failed: Invalid password');
+            console.log('Invalid password for:', email);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
@@ -34,7 +37,7 @@ router.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        console.log('Admin login successful:', email);
+        console.log('Admin login successful for:', email);
         res.json({
             token,
             user: {
