@@ -48,15 +48,23 @@ function showLoading() {
 
 // Add this function to format events for calendar
 function formatEventsForCalendar(events) {
-    return events.map(event => ({
-        title: event.name,
-        start: new Date(event.date + 'T' + event.time),
-        location: event.location,
-        extendedProps: {
-            description: event.description,
-            availableSeats: event.availableSeats
-        }
-    }));
+    return events.map(event => {
+        // Format the date and time properly
+        const eventDate = event.date.split('T')[0]; // Get just the date part
+        const eventDateTime = `${eventDate}T${event.time}`; // Combine date and time
+
+        return {
+            id: event._id, // Important for event clicking
+            title: event.name,
+            start: eventDateTime,
+            allDay: false,
+            extendedProps: {
+                description: event.description,
+                location: event.location,
+                availableSeats: event.availableSeats
+            }
+        };
+    });
 }
 
 // Update fetchEvents to handle calendar
