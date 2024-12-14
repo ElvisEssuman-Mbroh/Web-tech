@@ -28,12 +28,13 @@ loginForm.addEventListener('submit', async (e) => {
     
     const email = document.getElementById('adminEmail').value;
     const password = document.getElementById('adminPassword').value;
-    const errorMessage = document.querySelector('#loginSection .error-message') || 
+    const errorDiv = document.getElementById('loginError') || 
         document.createElement('div');
     
-    errorMessage.className = 'error-message text-red-500 mt-4 text-center';
-    if (!document.querySelector('#loginSection .error-message')) {
-        loginForm.appendChild(errorMessage);
+    errorDiv.id = 'loginError';
+    errorDiv.className = 'text-red-500 mt-2 text-center';
+    if (!document.getElementById('loginError')) {
+        loginForm.appendChild(errorDiv);
     }
 
     try {
@@ -46,26 +47,23 @@ loginForm.addEventListener('submit', async (e) => {
         });
 
         const data = await response.json();
+        console.log('Login response:', data);
 
         if (!response.ok) {
             throw new Error(data.error || 'Login failed');
         }
 
-        // Store the token and role
         localStorage.setItem('token', data.token);
         localStorage.setItem('userRole', 'admin');
-        token = data.token;
-
-        // Hide login form and show dashboard
+        
         loginSection.classList.add('hidden');
         adminDashboard.classList.remove('hidden');
-
-        // Fetch events after successful login
+        
         await fetchEvents();
 
     } catch (error) {
         console.error('Login error:', error);
-        errorMessage.textContent = error.message;
+        errorDiv.textContent = error.message;
     }
 });
 
