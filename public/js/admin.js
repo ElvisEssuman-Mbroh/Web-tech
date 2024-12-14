@@ -30,7 +30,7 @@ loginForm.addEventListener('submit', async (e) => {
     const password = document.getElementById('adminPassword').value;
 
     try {
-        const response = await fetch('http://localhost:5001/api/admin/login', {
+        const response = await fetch('/api/admin/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ async function fetchEvents() {
     if (!token) return;
     
     try {
-        const response = await fetch('http://localhost:5001/api/events', {
+        const response = await fetch('/api/events', {
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -133,8 +133,8 @@ eventForm.addEventListener('submit', async (e) => {
     try {
         const response = await fetch(
             eventId 
-                ? `http://localhost:5001/api/events/${eventId}`
-                : 'http://localhost:5001/api/events',
+                ? `/api/events/${eventId}`
+                : '/api/events',
             {
                 method: eventId ? 'PUT' : 'POST',
                 headers: {
@@ -162,7 +162,7 @@ eventForm.addEventListener('submit', async (e) => {
 // Edit Event
 async function editEvent(id) {
     try {
-        const response = await fetch(`http://localhost:5001/api/events/${id}`, {
+        const response = await fetch(`/api/events/${id}`, {
             headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -193,7 +193,7 @@ async function deleteEvent(id) {
     if (!confirm('Are you sure you want to delete this event?')) return;
 
     try {
-        const response = await fetch(`http://localhost:5001/api/events/${id}`, {
+        const response = await fetch(`/api/events/${id}`, {
             method: 'DELETE',
             headers: { 
                 'Authorization': `Bearer ${token}`,
