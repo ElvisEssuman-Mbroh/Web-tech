@@ -118,6 +118,7 @@ function displayEvents(events) {
                     <img src="${event.imageUrl}" 
                         alt="${event.name}"
                         class="w-full h-full object-cover object-center"
+                        onerror="this.onerror=null; this.src='./images/placeholder.jpg';"
                     />
                 ` : `
                     <div class="h-full w-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
@@ -253,9 +254,7 @@ function closeModal() {
 // Book event
 async function bookEvent(eventId) {
     try {
-        console.log('Attempting to book event with ID:', eventId); // Debug log
         const token = localStorage.getItem('token');
-        console.log('Token:', token); // Debug log
         if (!token) {
             window.location.href = 'login.html';
             return;
@@ -275,12 +274,20 @@ async function bookEvent(eventId) {
             throw new Error(data.error || 'Failed to book event');
         }
 
+        // Show success message
         alert('Event booked successfully!');
-        closeModal();
+        
+        // Refresh events list
         await fetchEvents();
+        
+        // Close modal if open
+        if (modal && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+
     } catch (error) {
-        console.error('Error booking event:', error);
-        alert(error.message);
+        console.error('Booking error:', error);
+        alert(error.message || 'Failed to book event');
     }
 }
 

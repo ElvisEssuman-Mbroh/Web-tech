@@ -49,85 +49,61 @@ router.get('/for-you', auth, async (req, res) => {
 
 // 2. POST routes for specific actions
 router.post('/rsvp/:eventId', auth, async (req, res) => {
-  const { eventId } = req.params;
-  console.log('RSVP attempt - Event ID:', eventId);
-  console.log('RSVP attempt - User ID:', req.userId);
+    const { eventId } = req.params;
+    console.log('RSVP attempt:', { eventId, userId: req.userId });
 
-  if (!req.userId) {
-    console.log('No user ID found in request');
-    return res.status(401).json({ error: 'Authentication required' });
-  }
+    try {
+        // Validate MongoDB ObjectId
+        if (!mongoose.Types.ObjectId.isValid(eventId)) {
+            return res.status(400).json({ error: 'Invalid event ID' });
+        }
 
-  try {
-    // First, verify the event ID is valid
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      console.log('Invalid event ID format');
-      return res.status(400).json({ error: 'Invalid event ID format' });
+        // Find the event
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        // Check if event has available seats
+        if (event.availableSeats <= 0) {
+            return res.status(400).json({ error: 'No seats available' });
+        }
+
+        // Find the user
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if user already booked this event
+        if (user.rsvpedEvents && user.rsvpedEvents.includes(eventId)) {
+            return res.status(400).json({ error: 'You have already booked this event' });
+        }
+
+        // Initialize rsvpedEvents array if it doesn't exist
+        if (!user.rsvpedEvents) {
+            user.rsvpedEvents = [];
+        }
+
+        // Update event and user
+        event.availableSeats -= 1;
+        user.rsvpedEvents.push(eventId);
+
+        // Save both documents
+        await Promise.all([
+            event.save(),
+            user.save()
+        ]);
+
+        res.status(200).json({
+            message: 'Event booked successfully',
+            availableSeats: event.availableSeats
+        });
+
+    } catch (error) {
+        console.error('RSVP Error:', error);
+        res.status(500).json({ error: 'Server error. Could not RSVP.' });
     }
-
-    const event = await Event.findById(eventId);
-    console.log('Event lookup result:', event ? 'Found' : 'Not found');
-
-    if (!event) {
-      return res.status(404).json({ error: 'Event not found' });
-    }
-
-    // Then, verify the user ID is valid
-    if (!mongoose.Types.ObjectId.isValid(req.userId)) {
-      console.log('Invalid user ID format');
-      return res.status(400).json({ error: 'Invalid user ID format' });
-    }
-
-    const user = await User.findById(req.userId);
-    console.log('User lookup result:', user ? 'Found' : 'Not found');
-
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Check seats availability
-    if (event.availableSeats <= 0) {
-      console.log('No seats available');
-      return res.status(400).json({ error: 'No seats available for this event' });
-    }
-
-    // Check if already RSVPed
-    const eventIdStr = event._id.toString();
-    const userRSVPs = user.rsvpedEvents.map(id => id.toString());
-    console.log('RSVP check:', {
-      eventId: eventIdStr,
-      userRSVPs,
-      isAlreadyRSVPed: userRSVPs.includes(eventIdStr)
-    });
-
-    if (userRSVPs.includes(eventIdStr)) {
-      return res.status(400).json({ error: 'You have already RSVPed for this event' });
-    }
-
-    // Update event
-    event.availableSeats -= 1;
-    await event.save();
-    console.log('Event updated - new seats:', event.availableSeats);
-
-    // Update user
-    user.rsvpedEvents.push(event._id);
-    await user.save();
-    console.log('User RSVPs updated successfully');
-
-    res.status(200).json({ 
-      message: 'RSVP successful',
-      event,
-      availableSeats: event.availableSeats
-    });
-  } catch (error) {
-    console.error('RSVP error details:', {
-      error: error.message,
-      stack: error.stack,
-      userId: req.userId,
-      eventId: eventId
-    });
-    res.status(500).json({ error: 'Server error. Could not RSVP.' });
-  }
 });
 
 router.post('/remove-rsvp/:eventId', auth, async (req, res) => {
