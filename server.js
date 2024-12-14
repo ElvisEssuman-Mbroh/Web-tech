@@ -19,10 +19,31 @@ app.use((req, res, next) => {
 // Add this line after your other middleware configurations
 app.use('/uploads', express.static('uploads'));
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/AcityEvents')
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+// MongoDB connection with proper options
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 15000, // Timeout after 15s instead of 30s
+    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+    connectTimeoutMS: 15000, // Give up initial connection after 15s
+    retryWrites: true
+})
+.then(() => {
+    console.log('MongoDB connected successfully');
+})
+.catch(err => {
+    console.error('MongoDB connection error:', err);
+});
+
+// Add MongoDB connection error handler
+mongoose.connection.on('error', err => {
+    console.error('MongoDB connection error:', err);
+});
+
+// Add MongoDB disconnection handler
+mongoose.connection.on('disconnected', () => {
+    console.log('MongoDB disconnected');
+});
 
 // Import Routes
 const userRoutes = require('./routes/userRoute');

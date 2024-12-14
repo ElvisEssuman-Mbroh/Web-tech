@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const { auth } = require('../middleware/auth');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 
@@ -18,26 +19,26 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        error: 'Please enter a valid email address' 
+    // Check MongoDB connection
+    if (mongoose.connection.readyState !== 1) {
+      console.error('Database not connected. ReadyState:', mongoose.connection.readyState);
+      return res.status(500).json({ 
+        error: 'Database connection error. Please try again.' 
       });
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      return res.status(400).json({ 
-        error: 'Password must be at least 6 characters long' 
-      });
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ 
-        error: 'Email already registered' 
+    try {
+      // Check if user exists with timeout
+      const existingUser = await User.findOne({ email }).maxTimeMS(5000);
+      if (existingUser) {
+        return res.status(400).json({ 
+          error: 'Email already registered' 
+        });
+      }
+    } catch (dbError) {
+      console.error('Database operation error:', dbError);
+      return res.status(500).json({ 
+        error: 'Database operation failed. Please try again.' 
       });
     }
 
@@ -57,7 +58,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(400).json({ 
+    res.status(error.name === 'ValidationError' ? 400 : 500).json({ 
       error: error.message || 'Registration failed',
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });

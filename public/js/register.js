@@ -62,7 +62,9 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
 
     } catch (error) {
         console.error('Registration error details:', error);
-        errorMessage.textContent = error.message;
+        errorMessage.textContent = error.message === 'Failed to fetch' 
+            ? 'Connection error. Please try again.' 
+            : error.message;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('bg-red-50', 'text-red-500');
     }
