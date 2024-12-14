@@ -44,8 +44,13 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
             body: JSON.stringify(userData)
         });
 
-        const data = await response.json();
-        console.log('Server response:', data);
+        let data;
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            data = await response.json();
+        } else {
+            throw new Error('Server returned non-JSON response');
+        }
 
         if (!response.ok) {
             throw new Error(data.error || 'Registration failed');
@@ -63,7 +68,9 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     } catch (error) {
         console.error('Registration error details:', error);
         errorMessage.textContent = error.message === 'Failed to fetch' 
-            ? 'Connection error. Please try again.' 
+            ? 'Server connection error. Please try again later.'
+            : error.message === 'Server returned non-JSON response'
+            ? 'Server error. Please try again later.'
             : error.message;
         errorMessage.classList.remove('hidden');
         errorMessage.classList.add('bg-red-50', 'text-red-500');

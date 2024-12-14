@@ -6,26 +6,27 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Add this line near your other middleware configurations
+// CORS configuration
 app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
 
-// Add this line after your other middleware configurations
-app.use('/uploads', express.static('uploads'));
-
-// MongoDB connection with proper options
-mongoose.connect(process.env.MONGODB_URI, {
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 15000, // Timeout after 15s instead of 30s
-    socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-    connectTimeoutMS: 15000, // Give up initial connection after 15s
+    serverSelectionTimeoutMS: 15000,
+    socketTimeoutMS: 45000,
+    connectTimeoutMS: 15000,
     retryWrites: true
 })
 .then(() => {
@@ -35,25 +36,23 @@ mongoose.connect(process.env.MONGODB_URI, {
     console.error('MongoDB connection error:', err);
 });
 
-// Add MongoDB connection error handler
-mongoose.connection.on('error', err => {
-    console.error('MongoDB connection error:', err);
-});
-
-// Add MongoDB disconnection handler
-mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected');
-});
-
-// Import Routes
+// Routes
 const userRoutes = require('./routes/userRoute');
 const eventRoutes = require('./routes/eventRoute');
 const adminRoutes = require('./routes/adminRoute');
 
-// Use Routes
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/admin', adminRoutes);
 
-const PORT = 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// Start server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
