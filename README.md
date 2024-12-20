@@ -1,5 +1,3 @@
----
-
 # Campus Event Management System
 
 This is a full-stack web application for managing campus events. The system includes user registration, event preferences, event listings, RSVP functionality, and event creation by admins. 
@@ -204,7 +202,8 @@ Access the application online:
 ## Screenshots
 
 You can include relevant screenshots of your application here to showcase:
-1. All events API test(https://github.com/user-attachments/assets/318556eb-6637-4eaf-967e-b4d67e3620f9)
+1. All events API test ![Screenshot 2024-12-17 002843](https://github.com/user-attachments/assets/4d623e29-2ac8-48a4-bccc-5f03ec9ce7dd)
+
 2. Get Events(User Dashboard) API Test ![Screenshot 2024-12-17 002736](https://github.com/user-attachments/assets/28bab894-e16d-4b51-95b2-e351c49c17a6)
 3. Admin Login API test ![Screenshot 2024-12-17 000931](https://github.com/user-attachments/assets/eb6f7b0a-2b02-4527-95f1-2a19d68d4322)
 4. User Login API test ![Screenshot 2024-12-17 000824](https://github.com/user-attachments/assets/a3417ca1-c2d3-44de-a774-4ef9e04d1293)
